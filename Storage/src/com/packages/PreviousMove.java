@@ -33,5 +33,10 @@ public final class PreviousMove {
 	public int getId() {
 		return id;
 	}
+	public String toString() {
+		String tempString = new String("Date: " + date + "/br" +"Position: "+positionX+" "+positionY+" "
+	+positionZ);
+		return tempString;
+	}
 	
 }

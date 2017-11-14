@@ -1,70 +1,59 @@
 package com.storage;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Scanner;
 import java.util.Stack;
 
 import com.packages.*;
 import com.packages.Package;
 
 public class Storage {
-	private Stack<Package[][]> storage;
+	private Stack<Package>[][] storage;
 	private final int SIZE_X, SIZE_Y, SIZE_Z;
 	private List<PreviousMove> storagePreviousMoves;
+	private HashMap<Integer,Package> hashMapOfPackages;
+	private HashMap<TypeOfPackage, Package> enumHash;
 	
 	Storage(int sizeX,int sizeY,int sizeZ) {
 		this.SIZE_X = sizeX;
 		this.SIZE_Y = sizeY;
 		this.SIZE_Z = sizeZ;
-		this.storage = new Stack<Package[][]>();
+		this.storage = (Stack<Package>[][]) new Stack[this.SIZE_X][this.SIZE_Y];
+		this.enumHash = new HashMap<TypeOfPackage, Package>();
+		this.hashMapOfPackages = new HashMap<Integer,Package>();
+		this.storagePreviousMoves = new ArrayList<PreviousMove>();
 	}
 	private Package addPackage(TypeOfPackage type, int PRIORTY , String description) {
-		if(PRIORTY<=5 && PRIORTY>=1) {
-			if(description==null) {
-				return new Package(type,PRIORTY);
-			}
-			else {
-				return new Package(type,PRIORTY,description);
-			}
+		while(PRIORTY>5 && PRIORTY<1) {
+			System.out.println("Priorty must be a number between 1 to 5,"
+					+ " please write correct number: ");
+			Scanner reader = new Scanner(System.in);
+			int n = reader.nextInt();
+			PRIORTY = n;
+			reader.close(); 
 		}
-		else {
-			System.out.println("Package wasn't added, becouse priorty must be a number between 1 to 5");
-			return null;
-		}
+		Package tempPackage = new Package(type,PRIORTY,description);
+		addToHashMap(tempPackage);
+		return tempPackage;
+	}
+	private void addToHashMap(Package tempPackage) {
+		this.enumHash.put(tempPackage.getType(), tempPackage);
+		this.hashMapOfPackages.put(tempPackage.getID(), tempPackage);
 	}
 	private Package getPackageByNumber(int number) {
-		for(int i=0; i<storage.size(); i++) {
-			for(int j=0; j<this.SIZE_X; j++) {
-				for(int k=0; k<this.SIZE_Y; k++) {
-					if(storage.elementAt(i)[j][k].getID() == number) {
-						return storage.elementAt(i)[j][k];
-					}
-				}
-			}
-		}
-		return null;
+		return this.hashMapOfPackages.get(number);
 	}
 	private List<Package> getAllPackageByType(TypeOfPackage type) {
 		List<Package> tempList = new ArrayList<Package>();
-		for(int i=0; i<storage.size(); i++) {
-			for(int j=0; j<this.SIZE_X; j++) {
-				for(int k=0; k<this.SIZE_Y; k++) {
-					if(storage.elementAt(i)[j][k].getType() == type) {
-						tempList.add(storage.elementAt(i)[j][k]);
-					}
-				}
-			}
-		}
+		tempList.add(this.enumHash.get(type));
 		return tempList;
 	}
 	private void getHistoryOfPreviousMoves() {
 		for(int i=0; i<this.storagePreviousMoves.size(); i++) {
 			System.out.println("Move number: "+(i+1));
-			System.out.println("Package with id: "+this.storagePreviousMoves.get(i).getId()+" was moved to:");
-			System.out.println("Position x: "+ this.storagePreviousMoves.get(i).getPositionX());
-			System.out.println("Position y: "+ this.storagePreviousMoves.get(i).getPositionY());
-			System.out.println("Position z: "+ this.storagePreviousMoves.get(i).getPositionZ());
-			System.out.println("Date of this move: "+ this.storagePreviousMoves.get(i).getDate());
+			this.storagePreviousMoves.get(i).toString();
 		}
 	}
 }
