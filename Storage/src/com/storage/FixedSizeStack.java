@@ -11,6 +11,9 @@ public class FixedSizeStack<E> extends Stack<E> {
 	
 	private final int MAX_SIZE;
 	
+	public int getMAX_SIZE() {
+		return MAX_SIZE;
+	}
 	FixedSizeStack(int size) {
 		super();
 		this.MAX_SIZE=size;
