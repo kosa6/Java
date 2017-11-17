@@ -34,7 +34,7 @@ public final class PreviousMove {
 		return id;
 	}
 	public String toString() {
-		String tempString = new String("Date: " + date + "\n" +"Position: "+positionX+" "+positionY+" "
+		String tempString = new String("ID:"+ id +"\n"+"Date: " + date + "\n" +"Position: "+positionX+" "+positionY+" "
 	+positionZ + "\n");
 		return tempString;
 	}

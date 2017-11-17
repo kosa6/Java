@@ -34,11 +34,11 @@ public class Package {
 		lastID++;
 	}
 
-	public String getDescription() {
+	String getDescription() {
 		return description;
 	}
 
-	public TypeOfPackage getType() {
+	TypeOfPackage getType() {
 		return type;
 	}
 
@@ -50,7 +50,7 @@ public class Package {
 		return addedDate;
 	}
 	
-	public void ShowAddedDate() {
+	public void ShowDateOfAllMoves() {
 		for(int i=0; i<previous.size(); i++) {
 			System.out.println(previous.get(i).toString());
 		}
@@ -68,30 +68,24 @@ public class Package {
 		return positionX;
 	}
 	
-	public void setPositionX(int positionX) {
-		this.positionX = positionX;
-	}
-	
 	public int getPositionY() {
 		return positionY;
-	}
-	
-	public void setPositionY(int positionY) {
-		this.positionY = positionY;
 	}
 	
 	public int getPositionZ() {
 		return positionZ;
 	}
 	
-	public void setPositionZ(int positionZ) {
-		this.positionZ = positionZ;
-	}
-	
-	public void addPreviousMove() {
+	void addPreviousMove() {
 		this.previous.add(new PreviousMove(positionX,positionY,positionZ,ID));
 	}
 	public PreviousMove getPreviousMove() {
 		return previous.get(previous.size()-1);
+	}
+	void setPosition(int positionX, int positionY, int positionZ) {
+		this.positionY = positionY;
+		this.positionX = positionX;
+		this.positionZ = positionZ;
+		addPreviousMove();
 	}
 }
