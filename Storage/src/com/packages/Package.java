@@ -1,15 +1,12 @@
 package com.packages;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class Package {
 	
 	private int positionX,positionY,positionZ;
-	
-	private static final DateFormat SDF = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 	private TypeOfPackage type;
 	private String description;
 	private int countOfMoves;
@@ -19,24 +16,18 @@ public class Package {
 	private final int ID;
 	private final int PRIORTY;
 	
-	public Package(TypeOfPackage type, int PRIORTY) {
+	public Package(TypeOfPackage type, int PRIORTY , String description,  int positionX, int positionY, int positionZ) {
+		this.positionX = positionX;
+		this.positionY = positionY;
+		this.positionZ = positionZ;
 		lastNumberIncrement();
-		this.ID = lastID;
-		this.type = type;
-		this.addedDate = new Date();
-		this.PRIORTY = PRIORTY;
-		this.addPreviousMove();
-		
-	}
-	public Package(TypeOfPackage type, int PRIORTY , String description) {
-		lastNumberIncrement();
+		previous = new ArrayList<PreviousMove>();
 		this.ID = lastID;
 		this.description = description;
 		this.type = type;
 		this.PRIORTY = PRIORTY;
 		this.addedDate = new Date();
 		this.addPreviousMove();
-		
 	}
 	
 	private static void lastNumberIncrement() {
@@ -60,7 +51,9 @@ public class Package {
 	}
 	
 	public void ShowAddedDate() {
-		System.out.println(SDF.format(addedDate));
+		for(int i=0; i<previous.size(); i++) {
+			System.out.println(previous.get(i).toString());
+		}
 	}
 
 	public int getID() {
@@ -98,5 +91,7 @@ public class Package {
 	public void addPreviousMove() {
 		this.previous.add(new PreviousMove(positionX,positionY,positionZ,ID));
 	}
-	
+	public PreviousMove getPreviousMove() {
+		return previous.get(previous.size()-1);
+	}
 }
