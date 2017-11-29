@@ -12,6 +12,8 @@ public class Storage {
 	private HashMap<TypeOfPackage, Package> enumHash;
 	public List<Package> outsideStorage;
 	
+	private List<FixedSizeStack<Package>> listOfStack;
+	
 	public int temp = 0;
 	
 	@SuppressWarnings("unchecked")
@@ -20,17 +22,46 @@ public class Storage {
 		this.SIZE_Y = sizeY;
 		this.SIZE_Z = sizeZ;
 		this.storage = (FixedSizeStack<Package>[][]) new FixedSizeStack[this.SIZE_X][this.SIZE_Y];
+		this.listOfStack = new ArrayList<FixedSizeStack<Package>>();
 		for(int i=0; i<SIZE_X; i++)
 		{
 			for(int j=0; j<SIZE_Y; j++) 
 			{
-				this.storage[i][j] = new FixedSizeStack<Package>(SIZE_Z);
+				this.storage[i][j] = new FixedSizeStack<Package>(SIZE_Z,i,j);
+				listOfStack.add(this.storage[i][j]);
 			}
 		}
 		this.enumHash = new HashMap<TypeOfPackage, Package>();
 		this.hashMapOfPackages = new HashMap<Integer,Package>();
 		this.storagePreviousMoves = new ArrayList<PreviousMove>();
 		this.outsideStorage = new ArrayList<Package>();
+	}
+	public boolean addPackageNew(TypeOfPackage type, int priority , String description) {
+		for(int i=0; i<this.listOfStack.size(); i++) {
+			if(this.listOfStack.size() == 0) {
+				this.addToStackNew(type, priority, description, i);
+				return true;
+			}
+			else {
+				if(checkIfStackIsFull(this.listOfStack.get(i))) 
+				{
+					continue;
+				}
+				else {
+					this.addToStackNew(type, priority, description, i);
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	private boolean checkIfStackIsFull(FixedSizeStack<Package> stack) {
+		if(stack.getMAX_SIZE()-stack.size() == 0) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 	public void addPackage(TypeOfPackage type, int priority , String description) 
 	{
@@ -55,6 +86,22 @@ public class Storage {
 		addToHashMaps(tempPackage);
 		return tempPackage;
 	}
+	private void addToStackNew(TypeOfPackage type, int priority , String description,int i) {
+		if(this.listOfStack.get(i).size() == 0) {
+			this.listOfStack.get(i).push(createPackage(type,priority,description,
+					this.listOfStack.get(i).getPOSITION_X(),
+					this.listOfStack.get(i).getPOSITION_Y(),
+					this.listOfStack.get(i).getMAX_SIZE()-this.listOfStack.get(i).size()));
+		}
+		else {
+			if(this.listOfStack.get(i).peek().getPRIORTY()<= priority) {
+				this.listOfStack.get(i).push(createPackage(type,priority,description,
+						this.listOfStack.get(i).getPOSITION_X(),
+						this.listOfStack.get(i).getPOSITION_Y(),
+						this.listOfStack.get(i).getMAX_SIZE()-this.listOfStack.get(i).size()));
+			}
+		}
+	}
 	private boolean addToStack(TypeOfPackage type, int priority , String description) 
 	{
 		for(int indexX=0; indexX<SIZE_X; indexX++)
@@ -66,7 +113,7 @@ public class Storage {
 					if(this.storage[indexX][indexY].size() == 0)
 					{
 						this.storage[indexX][indexY].push(createPackage(type,priority,description,indexX,indexY,
-								(this.storage[indexX][indexY].getMAX_SIZE() - this.storage[indexX][indexY].size())-1));
+								(this.storage[indexX][indexY].getMAX_SIZE() - this.storage[indexX][indexY].size())));
 						return true;
 					}
 					else 
@@ -74,7 +121,7 @@ public class Storage {
 						if(this.storage[indexX][indexY].peek().getPRIORTY() <= priority) 
 						{
 							this.storage[indexX][indexY].push(createPackage(type,priority,description,indexX,indexY,
-									(this.storage[indexX][indexY].getMAX_SIZE() - this.storage[indexX][indexY].size())-1));
+									(this.storage[indexX][indexY].getMAX_SIZE() - this.storage[indexX][indexY].size())));
 							return true;
 						}
 					}
@@ -99,7 +146,7 @@ public class Storage {
 					{
 						this.storage[indexX][indexY].push(packageToMove);
 						packageToMove.setPosition(indexX, indexY, 
-								this.storage[indexX][indexY].getMAX_SIZE() - this.storage[indexX][indexY].size()-1);
+								this.storage[indexX][indexY].getMAX_SIZE() - this.storage[indexX][indexY].size());
 						packageToMove.addPreviousMove();
 						return true;
 					}
@@ -109,7 +156,7 @@ public class Storage {
 						{
 							this.storage[indexX][indexY].push(packageToMove);
 							packageToMove.setPosition(indexX, indexY, 
-									this.storage[indexX][indexY].getMAX_SIZE() - this.storage[indexX][indexY].size()-1);
+									this.storage[indexX][indexY].getMAX_SIZE() - this.storage[indexX][indexY].size());
 							packageToMove.addPreviousMove();
 							return true;
 						}

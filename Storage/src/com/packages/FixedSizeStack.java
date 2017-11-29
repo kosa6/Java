@@ -11,14 +11,24 @@ public class FixedSizeStack<E> extends Stack<E> {
 	
 	private final int MAX_SIZE;
 	
+	private final int POSITION_X;
+	private final int POSITION_Y;
+	
 	public int getMAX_SIZE() {
 		return MAX_SIZE;
 	}
+	public int getPOSITION_X() {
+		return this.POSITION_X;
+	}
+	public int getPOSITION_Y() {
+		return this.POSITION_Y;
+	}
 	
-	
-	FixedSizeStack(int size) {
+	FixedSizeStack(int size,int positionX,int positionY) {
 		super();
 		this.MAX_SIZE=size;
+		this.POSITION_X = positionX;
+		this.POSITION_Y = positionY;
 	}
 	
 	public E push(E object) {

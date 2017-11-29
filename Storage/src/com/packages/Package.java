@@ -38,7 +38,7 @@ public class Package {
 		return description;
 	}
 
-	TypeOfPackage getType() {
+	public TypeOfPackage getType() {
 		return type;
 	}
 
